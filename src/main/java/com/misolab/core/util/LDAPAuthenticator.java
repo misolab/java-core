@@ -1,10 +1,6 @@
 package com.misolab.core.util;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
@@ -19,22 +15,23 @@ import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Slf4j
-@Scope("prototype")
-@Component
+
 public class LDAPAuthenticator {
+//    Logger logger = Logger.getLogger("misolab-core");
 
     final static String[] ATTR_IDS = {"sAMAccountName", "mobile", "mail"};
 
-    final CoreProperties coreProperties;
+    final String principal;
+    final String providerUrl;
 
-    public LDAPAuthenticator(CoreProperties coreProperties) {
-        this.coreProperties = coreProperties;
+    public LDAPAuthenticator(String principal, String providerUrl) {
+        this.principal = principal;
+        this.providerUrl = providerUrl;
     }
 
     String getPrincipal(String id) {
-        String result = String.format(coreProperties.getPRINCIPAL(), id);
-        log.info("SECURITY_PRINCIPAL {}", result);
+        String result = String.format(principal, id);
+//        logger.info("SECURITY_PRINCIPAL:" + result);
         return result;
     }
 
@@ -42,7 +39,7 @@ public class LDAPAuthenticator {
         Hashtable<String, String> properties = new Hashtable<>();
         properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         properties.put(Context.SECURITY_AUTHENTICATION, "simple");
-        properties.put(Context.PROVIDER_URL, coreProperties.getPROVIDER_URL());
+        properties.put(Context.PROVIDER_URL, providerUrl);
         properties.put(Context.SECURITY_PRINCIPAL, getPrincipal(id));
         properties.put(Context.SECURITY_CREDENTIALS, pass);
 
@@ -68,7 +65,7 @@ public class LDAPAuthenticator {
         try {
             initLdapContext(userId, password);
         } catch (Exception e) {
-            log.error("login fail", e);
+//            logger.info(e.getMessage());
 
             String message = e.getMessage();
             String data = parseErrorCode(message);
@@ -108,7 +105,6 @@ public class LDAPAuthenticator {
         return code;
     }
 
-    @Getter
     public enum Result {
         OK("", ""),
         UnknownError("-1", "알수 없는 오류"),
@@ -131,6 +127,14 @@ public class LDAPAuthenticator {
         Result(String data, String message) {
             this.data = data;
             this.message = message;
+        }
+
+        public String getData() {
+            return data;
+        }
+
+        public String getMessage() {
+            return message;
         }
 
         public boolean isOk() {

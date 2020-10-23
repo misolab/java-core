@@ -1,18 +1,25 @@
 package com.misolab.core.vo;
 
 import com.misolab.core.exception.ApiException;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
-@NoArgsConstructor
 public class ApiResponse {
 
     Map<String, Object> data;
     Map<String, Object> error;
+
+    public ApiResponse() {
+    }
+
+    public Map<String, Object> getData() {
+        return data;
+    }
+
+    public Map<String, Object> getError() {
+        return error;
+    }
 
     public ApiResponse(Map<String, Object> data) {
         this.data = data;
