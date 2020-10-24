@@ -1,5 +1,6 @@
 package com.misolab.core.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.naming.Context;
@@ -15,10 +16,8 @@ import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+@Slf4j
 public class LDAPAuthenticator {
-//    Logger logger = Logger.getLogger("misolab-core");
-
     final static String[] ATTR_IDS = {"sAMAccountName", "mobile", "mail"};
 
     final String principal;
@@ -31,7 +30,7 @@ public class LDAPAuthenticator {
 
     String getPrincipal(String id) {
         String result = String.format(principal, id);
-//        logger.info("SECURITY_PRINCIPAL:" + result);
+        log.debug("SECURITY_PRINCIPAL:" + result);
         return result;
     }
 
@@ -65,7 +64,7 @@ public class LDAPAuthenticator {
         try {
             initLdapContext(userId, password);
         } catch (Exception e) {
-//            logger.info(e.getMessage());
+            log.debug(e.getMessage());
 
             String message = e.getMessage();
             String data = parseErrorCode(message);
