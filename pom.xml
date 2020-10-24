@@ -6,6 +6,7 @@
     <groupId>com.misolab</groupId>
     <artifactId>core</artifactId>
     <version>0.1.1</version>
+    <packaging>jar</packaging>
     <name>core</name>
     <description>Misolab Core Library Module</description>
     <url>https://github.com/misolab/java-core</url>
@@ -13,6 +14,7 @@
     <scm>
         <connection>scm:git:https://github.com/misolab/java-core.git</connection>
         <developerConnection>scm:git:https://github.com/misolab/java-core.git</developerConnection>
+        <url>https://github.com/misolab/java-core.git</url>
     </scm>
 
     <licenses>
@@ -39,13 +41,21 @@
         <java.version>1.8</java.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <commons-lang3.version>3.11</commons-lang3.version>
+        <slf4j.version>1.7.30</slf4j.version>
+        <lombok.version>1.18.16</lombok.version>
+        <junit-jupiter.version>5.7.0</junit-jupiter.version>
     </properties>
 
     <dependencies>
@@ -53,28 +63,28 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.11</version>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.16</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.30</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.7.0</version>
+            <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -84,7 +94,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
+                <version>${maven-surefire-plugin.version}</version>
             </plugin>
         </plugins>
     </build>
@@ -140,12 +150,13 @@
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>${maven-javadoc-plugin.version}</version>
                         <configuration>
+                            <source>8</source>
                             <failOnError>false</failOnError>
                             <additionalJOption>-Xdoclint:none</additionalJOption>
                         </configuration>
                         <executions>
                             <execution>
-                                <phase>package</phase>
+                                <id>attach-javadocs</id>
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
@@ -212,6 +223,18 @@
                                     <Implementation-Version>${project.version}</Implementation-Version>
                                 </manifestEntries>
                             </archive>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.8</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
                         </configuration>
                     </plugin>
                 </plugins>
