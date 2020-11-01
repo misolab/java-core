@@ -1,6 +1,8 @@
 package com.misolab.core.code;
 
-
+/**
+ * @author ock
+ */
 public enum ApiStatus {
     SUCCESS(0),
     BAD_REQUEST(401),

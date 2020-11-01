@@ -1,5 +1,6 @@
 package com.misolab.core.util;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,6 +17,9 @@ import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author ock
+ */
 @Slf4j
 public class LDAPAuthenticator {
     final static String[] ATTR_IDS = {"sAMAccountName", "mobile", "mail"};
@@ -23,6 +27,11 @@ public class LDAPAuthenticator {
     final String principal;
     final String providerUrl;
 
+    /**
+     *
+     * @param principal
+     * @param providerUrl
+     */
     public LDAPAuthenticator(String principal, String providerUrl) {
         this.principal = principal;
         this.providerUrl = providerUrl;
@@ -50,11 +59,22 @@ public class LDAPAuthenticator {
         context.setRequestControls(new Control[]{new SortControl("sAMAccountName", Control.CRITICAL)});
     }
 
+
+    /**
+     * @param userId
+     * @param password
+     * @return
+     */
     public boolean isSimpleLogin(String userId, String password) {
         Result result = login(userId, password);
         return result.isOk();
     }
 
+    /**
+     * @param userId
+     * @param password
+     * @return
+     */
     public Result login(String userId, String password) {
 //        https://stackoverflow.com/a/12370710
         if (StringUtils.isEmpty(password)) {
@@ -104,6 +124,7 @@ public class LDAPAuthenticator {
         return code;
     }
 
+    @Getter
     public enum Result {
         OK("", ""),
         UnknownError("-1", "알수 없는 오류"),
@@ -128,14 +149,9 @@ public class LDAPAuthenticator {
             this.message = message;
         }
 
-        public String getData() {
-            return data;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
+        /**
+         * @return
+         */
         public boolean isOk() {
             return this.equals(OK);
         }
