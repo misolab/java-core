@@ -1,16 +1,14 @@
 package com.misolab.core.crypto;
 
+import com.misolab.core.util.StringHelper;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.Cipher;
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
-import java.util.Arrays;
-import java.util.Base64;
 
 @Slf4j
-public abstract class CipherTemplate {
+public abstract class CipherTemplate implements StringHelper {
     Cipher cipher;
 
     public CipherTemplate(String algorithm) {
@@ -55,17 +53,4 @@ public abstract class CipherTemplate {
     protected abstract AlgorithmParameterSpec getAlgorithmParameterSpec();
 
     protected abstract Key getSecretKey();
-
-    protected byte[] stringToBytes(String str) {
-        byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
-        return Arrays.copyOf(bytes, bytes.length);
-    }
-
-    protected byte[] decode(String source) {
-        return Base64.getDecoder().decode(source);
-    }
-
-    protected String encode(byte[] source) {
-        return Base64.getEncoder().encodeToString(source);
-    }
 }

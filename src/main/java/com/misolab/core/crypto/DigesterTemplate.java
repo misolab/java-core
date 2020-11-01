@@ -1,11 +1,11 @@
 package com.misolab.core.crypto;
 
-import java.io.UnsupportedEncodingException;
+import com.misolab.core.util.StringHelper;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
-public class DigesterTemplate {
+public class DigesterTemplate implements StringHelper {
 
     private MessageDigest messageDigest;
 
@@ -22,12 +22,7 @@ public class DigesterTemplate {
     }
 
     public String digest(String str) {
-        byte[] digest;
-        try {
-            digest = messageDigest.digest(str.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("UTF-8 is not supported!");
-        }
-        return Base64.getEncoder().encodeToString(digest);
+        byte[] digest = messageDigest.digest(stringToBytes(str));
+        return encode(digest);
     }
 }
