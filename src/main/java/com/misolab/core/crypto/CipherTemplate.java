@@ -1,75 +1,71 @@
 package com.misolab.core.crypto;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.Arrays;
 import java.util.Base64;
 
-public class CipherTemplate {
+@Slf4j
+public abstract class CipherTemplate {
+    Cipher cipher;
 
-    private SecretKeySpec keySpec;
-    private AlgorithmParameterSpec ivSpec;
-    private Cipher cipher;
-
-    public CipherTemplate(String secretKey, String algorithm) {
-        init(secretKey, algorithm, null);
-    }
-
-    public CipherTemplate(String secretKey, String algorithm, byte[] iv) {
-        init(secretKey, algorithm, iv);
-    }
-
-    protected void init(String secretKey, String algorithm, byte[] iv) {
+    public CipherTemplate(String algorithm) {
         try {
-            byte[] raw = stringToBytes(secretKey);
-            if (iv != null) {
-                ivSpec = new IvParameterSpec(iv);
-                raw = secretKey.getBytes();
-            }
-            keySpec = new SecretKeySpec(raw, algorithm.contains("AES") ? "AES" : algorithm);
             cipher = Cipher.getInstance(algorithm);
         } catch (Exception e) {
-            throw new RuntimeException("CipherTemplate initialization is failed", e);
+            log.error("cipher create fail", e);
         }
     }
 
-    public String encrypt(String str) {
+    public String encrypt(String source) {
+        if (cipher == null) {
+            return null;
+        }
+
+        byte[] encrypted = null;
         try {
-            byte[] encrypted = null;
-            synchronized (cipher) {
-                cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
-                encrypted = cipher.doFinal(str.getBytes());
-            }
-            return Base64.getEncoder().encodeToString(encrypted);
+            cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(), getAlgorithmParameterSpec());
+            encrypted = cipher.doFinal(source.getBytes());
         } catch (Exception e) {
-            throw new RuntimeException("CipherTemplate encryption is failed", e);
+            log.error("fail ecrypt", e);
         }
+        return encode(encrypted);
     }
 
-    public String decrypt(String encStr) {
+    public String decrypt(String input) {
+        if (cipher == null) {
+            return null;
+        }
+
+        byte[] encrypted = decode(input);
+        byte[] decrypted = null;
         try {
-            byte[] encrypted = null;
-            encrypted = Base64.getDecoder().decode(encStr);
-
-            byte[] decrypted = null;
-            synchronized (cipher) {
-                cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
-                decrypted = cipher.doFinal(encrypted);
-            }
-            return new String(decrypted);
+            cipher.init(Cipher.DECRYPT_MODE, getSecretKey(), getAlgorithmParameterSpec());
+            decrypted = cipher.doFinal(encrypted);
         } catch (Exception e) {
-            throw new RuntimeException("CipherTemplate decryption is failed", e);
+            log.error("fail decrypt", e);
         }
+        return new String(decrypted);
     }
 
-    private static byte[] stringToBytes(String str) throws Exception {
-        final byte[] keyBytes = new byte[16];
-        final byte[] b = str.getBytes("UTF-8");
-        int len = b.length;
-        if (len > keyBytes.length)
-            len = keyBytes.length;
-        System.arraycopy(b, 0, keyBytes, 0, len);
-        return keyBytes;
+    protected abstract AlgorithmParameterSpec getAlgorithmParameterSpec();
+
+    protected abstract Key getSecretKey();
+
+    protected byte[] stringToBytes(String str) {
+        byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
+        return Arrays.copyOf(bytes, bytes.length);
+    }
+
+    protected byte[] decode(String source) {
+        return Base64.getDecoder().decode(source);
+    }
+
+    protected String encode(byte[] source) {
+        return Base64.getEncoder().encodeToString(source);
     }
 }

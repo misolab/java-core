@@ -10,28 +10,28 @@ class CipherTemplateTest {
     static byte[] iv = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
     @Test
-    void AES() {
-        String gwSeed = "1234567890abcdef";
-        CipherTemplate cipher = new CipherTemplate(gwSeed, "AES");
+    void AES_ECB() {
+        String SECRET_KEY = "1234567890abcdef";
 
-        String encrypted = cipher.encrypt(SAMPLE);
-        assertEquals(encrypted, "EvDhzhRj7cqPaJpq5JoJHg==");
+        AES aes_ecb = new AES("AES", SECRET_KEY);
+        String encrypted = aes_ecb.encrypt(SAMPLE);
+        assertEquals("EvDhzhRj7cqPaJpq5JoJHg==", encrypted);
 
-        String decrypted = cipher.decrypt("EvDhzhRj7cqPaJpq5JoJHg==");
-        assertEquals(decrypted, SAMPLE);
+        String decrypted = aes_ecb.decrypt("EvDhzhRj7cqPaJpq5JoJHg==");
+        assertEquals(SAMPLE, decrypted);
     }
 
-
     @Test
-    void AES_ECB() {
-        String gwSeed = "1234567890abcdef1234567890abcdef";
-        CipherTemplate cipher = new CipherTemplate(gwSeed, "AES/CBC/PKCS5Padding", iv);
+    void AES() {
+        String SECRET_KEY = "1234567890abcdef1234567890abcdef";
+        byte[] iv = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-        String encrypted = cipher.encrypt(SAMPLE);
-        assertEquals(encrypted, "fkP5FfsS4t5bgiatyIpGtw==");
+        AES aes = new AES("AES/CBC/PKCS5Padding", SECRET_KEY, iv);
+        String encrypted = aes.encrypt(SAMPLE);
+        assertEquals("fkP5FfsS4t5bgiatyIpGtw==", encrypted);
 
-        String decrypted = cipher.decrypt("fkP5FfsS4t5bgiatyIpGtw==");
-        assertEquals(decrypted, SAMPLE);
+        String decrypted = aes.decrypt("fkP5FfsS4t5bgiatyIpGtw==");
+        assertEquals(SAMPLE, decrypted);
     }
 
     @Test
