@@ -1,6 +1,6 @@
 package com.misolab.core.crypto;
 
-import com.misolab.core.util.StringHelper;
+import com.misolab.core.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.Cipher;
@@ -8,7 +8,7 @@ import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
 
 @Slf4j
-public abstract class CipherTemplate implements StringHelper {
+public abstract class CipherTemplate implements StringUtils {
 
     Cipher cipher;
 
@@ -36,7 +36,7 @@ public abstract class CipherTemplate implements StringHelper {
         } catch (Exception e) {
             log.error("fail ecrypt", e);
         }
-        return encode(encrypted);
+        return base64Encode(encrypted);
     }
 
     public String decrypt(String input) {
@@ -44,7 +44,7 @@ public abstract class CipherTemplate implements StringHelper {
             return null;
         }
 
-        byte[] encrypted = decode(input);
+        byte[] encrypted = base64Decode(input);
         byte[] decrypted = null;
         try {
             cipher.init(Cipher.DECRYPT_MODE, getSecretKey(), getAlgorithmParameterSpec());

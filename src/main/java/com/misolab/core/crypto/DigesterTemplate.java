@@ -1,11 +1,11 @@
 package com.misolab.core.crypto;
 
-import com.misolab.core.util.StringHelper;
+import com.misolab.core.util.StringUtils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class DigesterTemplate implements StringHelper {
+public class DigesterTemplate implements StringUtils {
 
     private MessageDigest messageDigest;
 
@@ -19,6 +19,6 @@ public class DigesterTemplate implements StringHelper {
 
     public String digest(String str) {
         byte[] digest = messageDigest.digest(stringToBytes(str));
-        return encode(digest);
+        return base64Encode(digest);
     }
 }
