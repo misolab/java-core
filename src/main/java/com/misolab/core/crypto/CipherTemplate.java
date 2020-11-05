@@ -9,13 +9,18 @@ import java.security.spec.AlgorithmParameterSpec;
 
 @Slf4j
 public abstract class CipherTemplate implements StringHelper {
+
     Cipher cipher;
+
+    protected abstract AlgorithmParameterSpec getAlgorithmParameterSpec();
+
+    protected abstract Key getSecretKey();
 
     public CipherTemplate(String algorithm) {
         try {
             cipher = Cipher.getInstance(algorithm);
         } catch (Exception e) {
-            log.error("cipher create fail", e);
+            throw new RuntimeException("CipherTemplate initialization is failed", e);
         }
     }
 
@@ -49,8 +54,4 @@ public abstract class CipherTemplate implements StringHelper {
         }
         return new String(decrypted);
     }
-
-    protected abstract AlgorithmParameterSpec getAlgorithmParameterSpec();
-
-    protected abstract Key getSecretKey();
 }

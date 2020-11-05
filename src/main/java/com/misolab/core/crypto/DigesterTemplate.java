@@ -10,10 +10,6 @@ public class DigesterTemplate implements StringHelper {
     private MessageDigest messageDigest;
 
     public DigesterTemplate(String algorithm) {
-        init(algorithm);
-    }
-
-    protected void init(String algorithm) {
         try {
             messageDigest = MessageDigest.getInstance(algorithm);
         } catch (NoSuchAlgorithmException e) {
