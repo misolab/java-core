@@ -6,7 +6,7 @@
     <groupId>com.misolab</groupId>
     <artifactId>core</artifactId>
     <packaging>jar</packaging>
-    <version>0.1.2</version>
+    <version>0.1.3</version>
     <name>core</name>
     <description>Misolab Core Library Module</description>
     <url>https://github.com/misolab/java-core</url>
