@@ -8,7 +8,7 @@ import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
 
 @Slf4j
-public abstract class CipherTemplate implements StringUtils {
+public abstract class CipherTemplate {
 
     Cipher cipher;
 
@@ -36,7 +36,7 @@ public abstract class CipherTemplate implements StringUtils {
         } catch (Exception e) {
             log.error("fail ecrypt", e);
         }
-        return base64Encode(encrypted);
+        return StringUtils.base64Encode(encrypted);
     }
 
     public String decrypt(String input) {
@@ -44,7 +44,7 @@ public abstract class CipherTemplate implements StringUtils {
             return null;
         }
 
-        byte[] encrypted = base64Decode(input);
+        byte[] encrypted = StringUtils.base64Decode(input);
         byte[] decrypted = null;
         try {
             cipher.init(Cipher.DECRYPT_MODE, getSecretKey(), getAlgorithmParameterSpec());

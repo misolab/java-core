@@ -1,5 +1,6 @@
 package com.misolab.core.crypto;
 
+import com.misolab.core.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.spec.IvParameterSpec;
@@ -24,7 +25,7 @@ public class AES extends CipherTemplate {
     }
 
     void init(String secretKey, byte[] iv) {
-        byte[] key = stringToBytes(secretKey);
+        byte[] key = StringUtils.stringToBytes(secretKey);
         if (iv != null) {
             ivSpec = new IvParameterSpec(iv);
         }

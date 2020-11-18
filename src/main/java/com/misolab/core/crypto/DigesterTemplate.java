@@ -5,7 +5,7 @@ import com.misolab.core.util.StringUtils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class DigesterTemplate implements StringUtils {
+public class DigesterTemplate {
 
     private MessageDigest messageDigest;
 
@@ -18,7 +18,7 @@ public class DigesterTemplate implements StringUtils {
     }
 
     public String digest(String str) {
-        byte[] digest = messageDigest.digest(stringToBytes(str));
-        return base64Encode(digest);
+        byte[] digest = messageDigest.digest(StringUtils.stringToBytes(str));
+        return StringUtils.base64Encode(digest);
     }
 }

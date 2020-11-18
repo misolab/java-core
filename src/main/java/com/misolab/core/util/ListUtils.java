@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 리스트 유틸리티
  */
-public interface ListUtils {
+public class ListUtils {
 
     /**
      * 리스트의 사이즈를 반환한다.
@@ -14,7 +14,7 @@ public interface ListUtils {
      * @param list
      * @return
      */
-    default int size(List<?> list) {
+    public static int size(List<?> list) {
         if (list == null) {
             return 0;
         }
@@ -28,7 +28,7 @@ public interface ListUtils {
      * @param value
      * @return
      */
-    default <T> List<T> add(List<T> list, T value) {
+    public static <T> List<T> add(List<T> list, T value) {
         if (list == null) {
             list = new ArrayList<>();
         }

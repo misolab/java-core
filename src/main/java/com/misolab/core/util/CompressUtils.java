@@ -1,5 +1,6 @@
 package com.misolab.core.util;
 
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
@@ -12,7 +13,8 @@ import java.io.IOException;
 /**
  * 압축 유틸리티
  */
-public interface CompressUtils extends Loggable {
+@Slf4j
+public class CompressUtils {
 
     /**
      * 입력한 바이트 배열을 BZip2로 압축하여 반환한다.
@@ -20,7 +22,7 @@ public interface CompressUtils extends Loggable {
      * @param input
      * @return
      */
-    default byte[] compress(byte[] input) {
+    public static byte[] compress(byte[] input) {
         ByteArrayOutputStream ref = null;
 
         try (val bais = new ByteArrayInputStream(input);
@@ -29,7 +31,7 @@ public interface CompressUtils extends Loggable {
             IOUtils.copy(bais, bzip2cos);
             ref = baos;
         } catch (IOException e) {
-            logger().error("failed to encode.", e);
+            log.error("failed to encode.", e);
             throw new RuntimeException(e);
         }
 
@@ -42,7 +44,7 @@ public interface CompressUtils extends Loggable {
      * @param input
      * @return
      */
-    default byte[] decompress(byte[] input) {
+    public static byte[] decompress(byte[] input) {
         ByteArrayOutputStream ref = null;
 
         try (val bais = new ByteArrayInputStream(input);
@@ -51,7 +53,7 @@ public interface CompressUtils extends Loggable {
             IOUtils.copy(bzip2cis, baos);
             ref = baos;
         } catch (IOException e) {
-            logger().error("failed to decode.", e);
+            log.error("failed to decode.", e);
             throw new RuntimeException(e);
         }
 
