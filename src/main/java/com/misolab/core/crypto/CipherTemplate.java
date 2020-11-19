@@ -43,15 +43,15 @@ public abstract class CipherTemplate {
         if (cipher == null) {
             return null;
         }
-
-        byte[] encrypted = StringUtils.base64Decode(input);
-        byte[] decrypted = null;
         try {
+            byte[] encrypted = StringUtils.base64Decode(input);
+            byte[] decrypted = null;
             cipher.init(Cipher.DECRYPT_MODE, getSecretKey(), getAlgorithmParameterSpec());
             decrypted = cipher.doFinal(encrypted);
+            return new String(decrypted);
         } catch (Exception e) {
             log.error("fail decrypt", e);
         }
-        return new String(decrypted);
+        return null;
     }
 }

@@ -14,21 +14,21 @@ public class AES extends CipherTemplate {
     SecretKeySpec keySpec;
     AlgorithmParameterSpec ivSpec;
 
-    public AES(String algorithm, String secretKey) {
+    public AES(String algorithm, String secretKey, int length) {
         super(algorithm);
-        init(secretKey, null);
+        makeKey(secretKey, length);
     }
 
-    public AES(String algorithm, String secretKey, byte[] iv) {
+    public AES(String algorithm, String secretKey, int length, byte[] iv) {
         super(algorithm);
-        init(secretKey, iv);
-    }
-
-    void init(String secretKey, byte[] iv) {
-        byte[] key = StringUtils.stringToBytes(secretKey);
+        makeKey(secretKey, length);
         if (iv != null) {
             ivSpec = new IvParameterSpec(iv);
         }
+    }
+
+    void makeKey(String secretKey, int length) {
+        byte[] key = StringUtils.stringToBytes(secretKey, length);
         keySpec = new SecretKeySpec(key, "AES");
     }
 
