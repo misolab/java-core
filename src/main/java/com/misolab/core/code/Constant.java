@@ -6,6 +6,9 @@ public interface Constant {
     String LF = "\n";
     String CRLF = CR + LF;
 
+    String PLUS = "+";
+    String ESCAPE_SPACE = "%20";
+
     String FILE_SEPARATOR = System.getProperty("file.separator");
     String LINE_SEPARATOR = System.getProperty("line.separator");
 

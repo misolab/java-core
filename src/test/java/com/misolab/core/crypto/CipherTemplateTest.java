@@ -13,7 +13,7 @@ class CipherTemplateTest {
     void AES_ECB() {
         String SECRET_KEY = "1234567890abcdef";
 
-        AES aes_ecb = new AES("AES", SECRET_KEY);
+        AES aes_ecb = new AES("AES", SECRET_KEY, SECRET_KEY.length());
         String encrypted = aes_ecb.encrypt(SAMPLE);
         assertEquals("EvDhzhRj7cqPaJpq5JoJHg==", encrypted);
 
@@ -26,7 +26,7 @@ class CipherTemplateTest {
         String SECRET_KEY = "1234567890abcdef1234567890abcdef";
         byte[] iv = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-        AES aes = new AES("AES/CBC/PKCS5Padding", SECRET_KEY, iv);
+        AES aes = new AES("AES/CBC/PKCS5Padding", SECRET_KEY, SECRET_KEY.length(), iv);
         String encrypted = aes.encrypt(SAMPLE);
         assertEquals("fkP5FfsS4t5bgiatyIpGtw==", encrypted);
 
